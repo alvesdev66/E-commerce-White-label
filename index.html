@@ -14,7 +14,7 @@
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: Arial, Helvetica, sans-serif;
             background-color: #f5f5f5;
         }
 
@@ -46,10 +46,6 @@
             gap: 10px;
         }
 
-        .logo:hover {
-            color: #c2185b;
-        }
-
         /* Menu Principal */
         .nav-menu {
             display: flex;
@@ -73,9 +69,6 @@
             gap: 5px;
         }
 
-        .nav-link:hover {
-            color: #e91e63;
-        }
 
         /* Submenu de Produtos */
         .submenu {
@@ -112,6 +105,7 @@
             display: block;
             font-size: 14px;
         }
+
         /* Ícone de submenu */
         .dropdown-icon {
             font-size: 12px;
@@ -136,11 +130,6 @@
             transition: color 0.3s ease;
             position: relative;
         }
-
-        .nav-icon:hover {
-            color: #e91e63;
-        }
-
         /* Toggle Mobile */
         .hamburger {
             display: none;
@@ -307,6 +296,17 @@
         hamburger.addEventListener('click', () => {
             hamburger.classList.toggle('active');
             navMenu.classList.toggle('active');
+
+            // Fechar submenu quando o menu for fechado
+            if (!navMenu.classList.contains('active')) {
+                navItems.forEach(item => {
+                    item.classList.remove('active');
+                    const submenu = item.querySelector('.submenu');
+                    if (submenu) {
+                        submenu.classList.remove('active');
+                    }
+                });
+            }
         });
 
         // Abrir/fechar submenu ao clicar
