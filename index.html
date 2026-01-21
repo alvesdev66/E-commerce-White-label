@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Juvele - Moda Feminina</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="./recursos/css/Barra-de-pesquisa.css">
     <style>
         * {
             margin: 0;
@@ -20,7 +21,7 @@
 
         /* Navbar */
         nav {
-            background-color: #ed2f7e;
+            background-color: #fff;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
             position: sticky;
             top: 0;
@@ -34,12 +35,13 @@
             justify-content: space-between;
             align-items: center;
             padding: 0 20px;
-            height: 70px;
+            height: 60px;
         }
 
         .logo {
             font-size: 18px;
-            color: #e91e63;
+            font-weight: bold;
+            color: #ff6598;
             text-decoration: none;
             display: flex;
             align-items: center;
@@ -59,7 +61,7 @@
         }
 
         .nav-link {
-            color: #ffffff;
+            color: #333;
             text-decoration: none;
             font-weight: 500;
             padding: 10px 5px;
@@ -139,9 +141,9 @@
         }
 
         .hamburger span {
-            width: 25px;
-            height: 3px;
-            background-color: #ffffff;
+            width: 23px;
+            height: 2.3px;
+            background-color: #333;
             border-radius: 2px;
             transition: all 0.3s ease;
         }
@@ -149,7 +151,7 @@
         /* Responsividade */
         @media (max-width: 768px) {
             .nav-container {
-                height: 60px;
+                height: 50px;
                 padding: 0 15px;
             }
 
@@ -192,7 +194,6 @@
             }
 
             .nav-link {
-                color: #333;
                 display: block;
                 padding: 15px 20px;
                 border-bottom: 1px solid #f0f0f0;
@@ -223,12 +224,13 @@
 </head>
 
 <body>
-    <!-- Navbar -->
+    <header>
+    <!-- BARRA DE NAVEGAÇÃO -->
     <nav>
         <div class="nav-container">
             <!-- Logo -->
             <a href="#" class="logo">
-                <img src="logo.png" alt="" style="width: 100px;">
+                JUVELE - Moda Feminina
             </a>
 
             <!-- Menu Principal -->
@@ -283,8 +285,14 @@
             </div>
         </div>
     </nav>
-
-
+<!-- BARRA DE PESQUISA -->
+  <div class="barra-de-pesquisa-totalidade">
+         <div class="caixa-de-pesquisa">
+            <span class="icon-pesquisa"><i class="fas fa-search"></i></span>
+            <input type="text" placeholder="Estou buscando...">
+         </div>
+      </div>
+    </header>
     <!-- Script -->
     <script>
         // Selecionar elementos
