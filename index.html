@@ -17,11 +17,43 @@
         body {
             font-family: Arial, Helvetica, sans-serif;
             background-color: #f5f5f5;
+            transition: overflow 0.3s ease;
+        }
+
+        body.menu-open {
+            overflow: hidden;
+        }
+
+        /* Overlay */
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .overlay.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
         }
 
         /* Navbar */
         nav {
-            background-color: #fff;
+            background-color: #e22a8c;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
             position: sticky;
             top: 0;
@@ -61,7 +93,7 @@
         }
 
         .nav-link {
-            color: #333;
+            color: #ffffff;
             text-decoration: none;
             font-weight: 500;
             padding: 10px 5px;
@@ -144,9 +176,9 @@
         .hamburger span {
             width: 23px;
             height: 2.3px;
-            background-color: #333;
+            background-color: #ffffff;
             border-radius: 2px;
-            transition: all 0.3s ease;
+            transition: all 0.1s ease;
         }
 
         /* Responsividade */
@@ -175,12 +207,12 @@
             .nav-menu {
                 position: fixed;
                 left: -100%;
-                top: 60px;
+                top: 52px;
                 flex-direction: column;
                 background-color: #fff;
                 width: 100%;
                 text-align: center;
-                transition: 0.3s;
+                transition: 0.1s;
                 box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
                 gap: 0;
                 padding: 2px 0;
@@ -195,6 +227,7 @@
             }
 
             .nav-link {
+                color: #333;
                 display: block;
                 padding: 15px 20px;
                 border-bottom: 1px solid #f0f0f0;
@@ -221,6 +254,7 @@
                 display: block;
             }
         }
+
         .metricas-instagram {
             display: flex;
             justify-content: center;
@@ -229,17 +263,90 @@
             font-size: 16px;
             color: #4a4a4a;
         }
+
+        /* Hashtags rotativas 🔁 */
+        .hashtags-container {
+            display: inline-block;
+            position: relative;
+            width: 260px;
+            height: 24px;
+            /* ajuste conforme o tamanho da fonte */
+            overflow: hidden;
+        }
+
+        .hashtag {
+            position: absolute;
+            left: 0;
+            right: 0;
+            transform: translateY(100%);
+            opacity: 0;
+            transition: transform 0.6s cubic-bezier(.2, .8, .2, 1), opacity 0.9s ease;
+            font-size: 16px;
+            color: #468ae4;
+        }
+
+        .hashtag.active {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .hashtag.slide-up {
+            transform: translateY(-100%);
+            opacity: 0;
+        }
+
+        .hashtag.slide-in {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        /* Skeleton logo styles */
+        .logo-empresa-vue {
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+
+        .skeleton {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg, #eeeeee 25%, #f5f5f5 50%, #eeeeee 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.2s linear infinite;
+        }
+
+        @keyframes shimmer {
+            0% {
+                background-position: 200% 0;
+            }
+
+            100% {
+                background-position: -200% 0;
+            }
+        }
+
+        .logo-empresa-vue img {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.2s ease;
+        }
     </style>
 </head>
 
 <body>
+    <!-- Overlay -->
+    <div class="overlay"></div>
+
     <header>
         <!-- BARRA DE NAVEGAÇÃO -->
         <nav>
             <div class="nav-container">
                 <!-- Logo -->
                 <a href="#" class="logo">
-                    JUVELE - Moda Feminina
+                    <img src="./recursos/identidade/logotipo.png" alt="logotipo da empresa/loja" style="width: 100px;">
                 </a>
 
                 <!-- Menu Principal -->
@@ -301,43 +408,76 @@
                 <input type="search" placeholder="Estou buscando...">
             </div>
         </div>
-        <!-- LOGO EMPRESA-->
-        <div class="logo-empresa"
+        <!-- LOGO EMPRESA (Vue + Skeleton) -->
+        <div id="logo-app"
             style="display: flex; justify-content: center; width: 100px; height: 100px; margin: 20px auto; border-radius: 30px; overflow: hidden;">
-            <img id="logo-img" src="./recursos/identidade/logo.jpg" alt="Logo da Empresa/Loja">
+            <div class="logo-empresa-vue">
+                <div v-if="!loaded" class="skeleton" aria-hidden="true"></div>
+                <img id="logo-img" :src="src" alt="" @load="onLoad"
+                    :style="{ transform: 'scale(' + zoom + ')' , visibility: loaded ? 'visible' : 'hidden' }">
+            </div>
         </div>
         <!-- Dominio/Nome DA EMPRESA-->
         <div class="nome-da-empresa">
-            <h1 style="text-align: center; font-size: 35px; color: #3f3f3f; font-weight: bold;">Juvele.com.br <!-- Icone de verificação--> <img src="./recursos/icones/verified.svg" alt="icone-de-empresa-vefiricada" style="width: 23px; height: 23px; vertical-align: middle;"></h1>
+            <h1 style="text-align: center; font-size: 35px; color: #3f3f3f; font-weight: bold;">Juvele.com.br
+                <!-- Icone de verificação--> <img src="./recursos/icones/verified.svg" alt="icone-de-empresa-vefiricada"
+                    style="width: 23px; height: 23px; vertical-align: middle;">
+            </h1>
         </div>
         <!-- BIOGRAFIA DA EMPRESA -->
-         <div class="bio-da-empresa">
+        <div class="bio-da-empresa">
             <p style=" text-align: center; font-size: 16px; color: #5a5a5a; margin: 10px auto; max-width: 400px;">
-               Seja MUITOO Bem vinda à nossa <strong><mark>Loja virtual</mark></strong>. Novidades toda semana! 🤍
-            </p>   
-         </div>
-         <!-- MÉTRICAS INSTAGRAM-->
-          <div class="metricas-instagram">
+                Seja MUITOO Bem vinda à nossa <strong><mark>Loja virtual</mark></strong>. Novidades toda semana! 🤍
+            </p>
+            <div class="hashtags-wrapper" style="margin: 10px auto; text-align: center;">
+                <div class="hashtags-container" aria-live="polite" aria-atomic="true">
+                    <span class="hashtag active"></span>
+                    <span class="hashtag"></span>
+                </div>
+            </div>
+        </div>
+        <!-- MÉTRICAS INSTAGRAM-->
+        <div class="metricas-instagram">
             <p><strong>10,4 Mil</strong> Seguidores</p>
             <p><strong>+500</strong> produtos</p>
     </header>
+    <hr style="margin-top: 25px;">
+    <!-- CATEGORIAS -->
     <!-- Script -->
+    <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
     <script>
-        // Carregar configurações de personalização
-        fetch('./data/personalizacao.json')
-            .then(response => response.json())
-            .then(data => {
-                const logoConfig = data.find(item => item.op === 'controle-sobre-logo');
-                if (logoConfig && logoConfig.zoom) {
-                    const logoImg = document.getElementById('logo-img');
-                    logoImg.style.transform = `scale(${logoConfig.zoom})`;
+        // Vue app para controlar skeleton e zoom da logo
+        const { createApp } = Vue;
+        createApp({
+            data() {
+                return {
+                    loaded: false,
+                    src: './recursos/identidade/logo.jpg',
+                    zoom: 1
+                };
+            },
+            methods: {
+                onLoad() {
+                    this.loaded = true;
                 }
-            })
-            .catch(error => console.error('Erro ao carregar personalização:', error));
+            },
+            mounted() {
+                fetch('./data/personalizacao.json')
+                    .then(response => response.json())
+                    .then(data => {
+                        const logoConfig = data.find(item => item.op === 'controle-sobre-logo');
+                        if (logoConfig && logoConfig.zoom) {
+                            this.zoom = logoConfig.zoom;
+                        }
+                    })
+                    .catch(error => console.error('Erro ao carregar personalização:', error));
+            }
+        }).mount('#logo-app');
 
         // Selecionar elementos
         const hamburger = document.querySelector('.hamburger');
         const navMenu = document.querySelector('.nav-menu');
+        const overlay = document.querySelector('.overlay');
         const navItems = document.querySelectorAll('.nav-item');
         const navLinks = document.querySelectorAll('.nav-link');
 
@@ -345,6 +485,8 @@
         hamburger.addEventListener('click', () => {
             hamburger.classList.toggle('active');
             navMenu.classList.toggle('active');
+            overlay.classList.toggle('active');
+            document.body.classList.toggle('menu-open');
 
             // Fechar submenu quando o menu for fechado
             if (!navMenu.classList.contains('active')) {
@@ -391,6 +533,8 @@
                 link.addEventListener('click', () => {
                     hamburger.classList.remove('active');
                     navMenu.classList.remove('active');
+                    overlay.classList.remove('active');
+                    document.body.classList.remove('menu-open');
                 });
             }
         });
@@ -400,6 +544,8 @@
             link.addEventListener('click', () => {
                 hamburger.classList.remove('active');
                 navMenu.classList.remove('active');
+                overlay.classList.remove('active');
+                document.body.classList.remove('menu-open');
                 navItems.forEach(item => {
                     item.classList.remove('active');
                     const submenu = item.querySelector('.submenu');
@@ -413,6 +559,8 @@
             if (!e.target.closest('nav')) {
                 hamburger.classList.remove('active');
                 navMenu.classList.remove('active');
+                overlay.classList.remove('active');
+                document.body.classList.remove('menu-open');
                 navItems.forEach(item => {
                     item.classList.remove('active');
                     const submenu = item.querySelector('.submenu');
@@ -420,6 +568,103 @@
                 });
             }
         });
+
+        // Fechar ao clicar no overlay
+        overlay.addEventListener('click', () => {
+            hamburger.classList.remove('active');
+            navMenu.classList.remove('active');
+            overlay.classList.remove('active');
+            document.body.classList.remove('menu-open');
+            navItems.forEach(item => {
+                item.classList.remove('active');
+                const submenu = item.querySelector('.submenu');
+                if (submenu) submenu.classList.remove('active');
+            });
+        });
+
+        // Remover overlay quando o layout não for mais mobile (menu hambúrguer desaparece)
+        function hideOverlayIfDesktop() {
+            if (window.innerWidth > 768) {
+                hamburger.classList.remove('active');
+                navMenu.classList.remove('active');
+                overlay.classList.remove('active');
+                document.body.classList.remove('menu-open');
+                navItems.forEach(item => {
+                    item.classList.remove('active');
+                    const submenu = item.querySelector('.submenu');
+                    if (submenu) submenu.classList.remove('active');
+                });
+            }
+        }
+
+        // Verifica ao redimensionar e ao carregar a página
+        window.addEventListener('resize', hideOverlayIfDesktop);
+        window.addEventListener('load', hideOverlayIfDesktop);
+        // Rotação de hashtags: sobe a atual e entra a próxima de baixo ✨
+        (function () {
+            const hashtagsLista = ['#ElasVestemJuvele', '#Promoções🔥', '#ModaFeminina', '#Compra100%Segura']; // personalize aqui
+            const container = document.querySelector('.hashtags-container');
+            if (!container) return;
+
+            const spans = Array.from(container.querySelectorAll('.hashtag'));
+            if (spans.length < 2) return;
+
+            // Inicializa texto
+            spans[0].textContent = hashtagsLista[0];
+            spans[1].textContent = hashtagsLista[1 % hashtagsLista.length];
+            spans[0].classList.add('active');
+            let visible = 0; // índice do span atualmente visível (0 ou 1)
+            let currentIndex = 0;
+            const intervalo = 2000; // tempo entre trocas (ms)
+            const duracaoAnim = 300; // deve corresponder ao transition do CSS
+            let animating = false;
+
+            function rotate() {
+                if (animating) return; // previne sobreposição de animações
+                animating = true;
+
+                const nextHashtagIndex = (currentIndex + 1) % hashtagsLista.length;
+                const outgoing = spans[visible];
+                const incoming = spans[1 - visible];
+
+                // Preparar incoming para entrar de baixo
+                incoming.textContent = hashtagsLista[nextHashtagIndex];
+                incoming.classList.remove('slide-in', 'slide-up', 'active');
+                outgoing.classList.remove('slide-in', 'slide-up');
+                // garantir estado inicial sem estilos inline que atrapalhem
+                incoming.style.transform = 'translateY(100%)';
+                incoming.style.opacity = '0';
+
+                // Forçar reflow para garantir transição
+                void incoming.offsetWidth;
+
+                // Aplicar animação: outgoing sobe, incoming entra de baixo
+                outgoing.classList.add('slide-up');
+                outgoing.classList.remove('slide-in');
+                incoming.classList.add('slide-in', 'active');
+
+                // Depois da animação, limpar classes/estilos do elemento que saiu
+                setTimeout(() => {
+                    outgoing.classList.remove('slide-up', 'active');
+                    outgoing.classList.remove('slide-in');
+                    // limpar estilos inline usados como fallback
+                    outgoing.style.transform = '';
+                    outgoing.style.opacity = '';
+
+                    // incoming permanece visível
+                    incoming.classList.remove('slide-in');
+                    incoming.classList.add('active');
+                    incoming.style.transform = '';
+                    incoming.style.opacity = '';
+
+                    visible = 1 - visible;
+                    currentIndex = nextHashtagIndex;
+                    animating = false;
+                }, duracaoAnim + 20);
+            }
+
+            setInterval(rotate, intervalo);
+        })();
     </script>
 </body>
 
