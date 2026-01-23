@@ -157,6 +157,10 @@
     border-bottom: 1px solid #f0f0f0;
 }
 
+.quebra-pequena {
+    display: none;
+}
+
 .parcelas-count {
     font-weight: 700;
     color: #2a2a2a;
@@ -342,10 +346,6 @@
         -webkit-line-clamp: 2;
     }
 
-    .produto-parcelamento {
-        display: none;
-    }
-
     .produto-preco-original {
         font-size: 11px;
     }
@@ -357,5 +357,9 @@
     .produto-botao {
         padding: 8px 10px;
         font-size: 11px;
+    }
+
+    .quebra-pequena {
+        display: block;
     }
 }
