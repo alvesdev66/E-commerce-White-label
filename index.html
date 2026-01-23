@@ -7,7 +7,7 @@
     <title>Juvele - Moda Feminina</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css">
     <link rel="stylesheet" href="./recursos/css/Barra-de-pesquisa.css">
-    <link rel="stylesheet" href="./estilos-para-card-de-produtos.css">
+    <link rel="stylesheet" href="./recursos/css/estilos-para-card-de-produtos.css">
     <style>
         * {
             margin: 0;
@@ -367,6 +367,49 @@
                 opacity: 0;
             }
         }
+
+        /* Botão WhatsApp Fixo */
+        .whatsapp-button {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            background-color: #25d366;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            transition: all 0.3s ease;
+            z-index: 500;
+            text-decoration: none;
+            color: #fff;
+        }
+
+        .whatsapp-button:hover {
+            background-color: #20ba5f;
+            transform: scale(1.1);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .whatsapp-button i {
+            font-size: 30px;
+        }
+
+        @media (max-width: 768px) {
+            .whatsapp-button {
+                bottom: 15px;
+                right: 15px;
+                width: 55px;
+                height: 55px;
+            }
+
+            .whatsapp-button i {
+                font-size: 28px;
+            }
+        }
     </style>
 </head>
 
@@ -516,6 +559,7 @@
                 Não foi possível carregar os produtos. Tente novamente.
             </div>
         </section>
+
     </main>
 
     <!-- Script -->
@@ -947,6 +991,11 @@
         // Carregar produtos ao iniciar
         document.addEventListener('DOMContentLoaded', carregarProdutos);
     </script>
+
+    <!-- Botão WhatsApp Fixo -->
+    <a href="https://wa.me/5585988881234" target="_blank" class="whatsapp-button" title="Fale conosco no WhatsApp">
+        <i class="ri-whatsapp-line"></i>
+    </a>
 </body>
 
 </html>
