@@ -402,19 +402,19 @@
             .whatsapp-button {
                 bottom: 15px;
                 right: 15px;
-                width: 55px;
-                height: 55px;
+                width: 45px;
+                height: 45px;
             }
 
             .whatsapp-button i {
-                font-size: 28px;
+                font-size: 19px;
             }
         }
 
         /* Botão Ver Mais */
         .btn-ver-mais {
             display: block;
-            margin: 40px auto;
+            margin: 20px auto;
             padding: 12px 40px;
             background-color: #33333300;
             color: #3d77dc;
@@ -434,7 +434,197 @@
             .btn-ver-mais {
                 padding: 10px 30px;
                 font-size: 16px;
-                margin: 30px auto;
+                margin: 20px auto;
+            }
+        }
+
+        /* Estilos do Footer */
+        footer {
+            background-color: #ffffff00;
+            color: #333;
+            padding: 80px 20px 0;
+            border-top: 1px solid #f0f0f0;
+            display: flex;
+            flex-direction: column;
+            min-height: auto;
+        }
+
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 60px;
+            width: 100%;
+            padding: 0 0 40px;
+        }
+
+        .footer-section h3 {
+            font-size: 13px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: #1a1a1a;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section li {
+            margin-bottom: 12px;
+        }
+
+        .footer-section a {
+            color: #666;
+            text-decoration: none;
+            transition: color 0.3s ease;
+            font-size: 16px;
+            font-weight: 400;
+        }
+
+        .footer-section p {
+            color: #666;
+            font-size: 16px;
+            line-height: 1.8;
+            font-weight: 400;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            margin-top: auto;
+            padding: 30px 20px;
+            border-top: 1px solid #f0f0f0;
+            font-size: 11px;
+            color: #999;
+            width: 100%;
+        }
+
+        .footer-social {
+            display: flex;
+            gap: 12px;
+            margin-top: 15px;
+        }
+
+        .footer-social a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            background-color: transparent;
+            border: 1px solid #ddd;
+            border-radius: 50%;
+            color: #666;
+            font-size: 15px;
+            transition: all 0.3s ease;
+        }
+
+        /* Estilos para Categorias */
+        .categorias-container {
+            max-width: 1200px;
+            margin: 10px auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: flex-start;
+            flex-wrap: nowrap;
+            gap: 12px;
+            overflow-x: auto;
+            overflow-y: hidden;
+            scroll-behavior: smooth;
+            animation: fadeIn 0.6s ease-in-out;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+
+        /* Esconder scrollbar para webkit browsers */
+        .categorias-container::-webkit-scrollbar {
+            display: none;
+        }
+
+        .categoria-badge {
+            display: inline-block;
+            padding: 10px 16px;
+            /*Largura vertical e horizontal da categoria*/
+            background-color: #ffffff;
+            border: 2px solid #f0f0f0;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 400;
+            color: #2a2a2a;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            text-decoration: none;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .categorias-hint {
+            max-width: 1200px;
+            margin: 10px auto 0;
+            padding: 0 20px;
+            font-size: 1px;
+            color: #999;
+            font-weight: 400;
+            text-align: left;
+            letter-spacing: 0.3px;
+            animation: fadeIn 0.8s ease-in-out;
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            footer {
+                padding: 50px 15px 0px;
+                margin-top: 5px;
+            }
+
+            .categorias-container {
+                gap: 10px;
+                padding: 0 15px;
+            }
+
+            .categorias-hint {
+                display: block;
+                padding: 0 15px;
+            }
+
+            .categoria-badge {
+                padding: 8px 14px;
+                font-size: 12px;
+            }
+
+            .footer-container {
+                gap: 40px;
+                grid-template-columns: 1fr;
+            }
+
+            .footer-section h3 {
+                font-size: 12px;
+            }
+
+            .footer-section a,
+            .footer-section p {
+                font-size: 16px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .categorias-container {
+                gap: 8px;
+                padding: 0 12px;
+            }
+
+            .categorias-hint {
+                padding: 0 12px;
+            }
+
+            .categoria-badge {
+                padding: 7px 12px;
+                font-size: 11px;
             }
         }
     </style>
@@ -582,7 +772,6 @@
                 Não foi possível carregar os produtos. Tente novamente.
             </div>
         </section>
-
     </main>
 
     <!-- Script -->
@@ -885,7 +1074,7 @@
 
         let produtosCarregados = [];
         let produtosExibidos = 0;
-        const PRODUTOS_POR_PAGINA = 4;
+        const PRODUTOS_POR_PAGINA = 4; //Deve ser sempre um multiplo de 2
 
         // Formata preço para Real brasileiro
         function formatarPreco(preco) {
@@ -1025,11 +1214,134 @@
                 btnVerMais = document.createElement('button');
                 btnVerMais.id = 'btnVerMais';
                 btnVerMais.className = 'btn-ver-mais';
-                btnVerMais.innerHTML = 'Ver mais <i class="ri-arrow-down-s-line"></i>';
+                btnVerMais.innerHTML = 'Mostrar mais <i class="ri-arrow-down-s-line"></i>';
                 btnVerMais.onclick = carregarMaisProdutos;
                 section.appendChild(btnVerMais);
             }
         }
+
+        // Gerar Categorias Dinamicamente
+        function gerarCategorias() {
+            // Verificar se as categorias já existem
+            if (document.querySelector('.categorias-container')) {
+                return;
+            }
+
+            // Lista de categorias
+            const categorias = [
+                'BLAZER',
+                'BLUSA',
+                'BODY',
+                'BOLSA',
+                'CALÇADO',
+                'CINTO',
+                'SHORTS',
+                'SAIA',
+                'VESTIDO'
+            ];
+
+            // Criar contêiner com hint
+            const wrapperContainer = document.createElement('div');
+
+            const hint = document.createElement('div');
+            hint.className = 'categorias-hint';
+            hint.textContent = 'Deslize para a direta e veja mais categorias.';
+
+            const container = document.createElement('div');
+            container.className = 'categorias-container';
+
+            const html = categorias.map(categoria => {
+                return `<button class="categoria-badge" data-categoria="${categoria.toLowerCase()}">${categoria}</button>`;
+            }).join('');
+
+            container.innerHTML = html;
+            wrapperContainer.appendChild(hint);
+            wrapperContainer.appendChild(container);
+
+            // Inserir após o texto animado
+            const textAnimator = document.getElementById('text-animator');
+            if (textAnimator) {
+                textAnimator.parentElement.insertBefore(wrapperContainer, textAnimator.nextElementSibling);
+            } else {
+                document.querySelector('main').insertBefore(wrapperContainer, document.querySelector('.produtos-destaque'));
+            }
+
+            // Função para verificar e ajustar alinhamento
+            function ajustarAlinhamento() {
+                if (container.scrollWidth <= container.clientWidth) {
+                    container.style.justifyContent = 'center';
+                } else {
+                    container.style.justifyContent = 'flex-start';
+                }
+            }
+
+            // Verificação inicial
+            setTimeout(ajustarAlinhamento, 100);
+
+            // Monitorar redimensionamento da janela
+            window.addEventListener('resize', ajustarAlinhamento);
+
+            // Monitorar mudanças no DOM usando ResizeObserver
+            if ('ResizeObserver' in window) {
+                const resizeObserver = new ResizeObserver(ajustarAlinhamento);
+                resizeObserver.observe(container);
+            }
+
+            logManager.log('✓ Categorias geradas dinamicamente com monitoramento ativo');
+        }
+
+        // Gerar Footer Dinamicamente
+        function gerarFooter() {
+            // Verificar se o footer já existe
+            if (document.querySelector('footer')) {
+                return;
+            }
+
+            const footer = document.createElement('footer');
+            footer.innerHTML = `
+            
+                <div class="footer-container">
+                    <div class="footer-section">
+                        <h3> Juvele - moda feminina</h3>
+                        <p>Qualidade, estilo e preço justo para você.</p>
+                        <div class="footer-social">
+                            <a href="https://instagram.com" target="_blank" title="Instagram"><i class="ri-instagram-line"></i></a>
+                            <a href="https://wa.me/5585988881234" target="_blank" title="WhatsApp"><i class="ri-whatsapp-line"></i></a>
+                        </div>
+                    </div>
+
+                    <div class="footer-section">
+                        <h3><i class="ri-shopping-bag-line"></i> Compras</h3>
+                        <ul>
+                            <li><a href="#">Carrinho</a></li>
+                            <li><a href="#">Meus Pedidos</a></li>
+                            <li><a href="#">Rastrear Pedido</a></li>
+                            <li><a href="#">Trocas e Devoluções</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="footer-section">
+                        <h3><i class="ri-customer-service-2-line"></i> Atendimento</h3>
+                        <ul>
+                            <li><a href="#">Contato</a></li>
+                            <li><a href="#">FAQ</a></li>
+                            <li><a href="#">Políticas de Privacidade</a></li>
+                            <li><a href="#">Termos de Serviço</a></li>
+                            <li><a href="#">Segurança</a></li>
+                        </ul>
+                    </div>
+                    <p style="font-size: 12px; color: #3b3b3b;"></p>
+                </div>
+
+                <div class="footer-bottom">
+                    <p>&copy; 2026 Juvele.com.br <br> Todos os direitos reservados. | Desenvolvido com <i class="ri-heart-fill" style="color: #e22a8c;"></i> para você.</p>
+                </div>
+            `;
+
+            document.body.appendChild(footer);
+            logManager.log('✓ Footer gerado dinamicamente');
+        }
+
 
         // Embaralha um array (Fisher-Yates)
         function embaralharArray(array) {
@@ -1339,6 +1651,35 @@
             }, 5000); // Verificar a cada 5 segundos
         }
 
+        // Controlar visibilidade do botão WhatsApp baseado no footer
+        function controlarBotaoWhatsApp() {
+            const whatsappBtn = document.querySelector('.whatsapp-button');
+            const footer = document.querySelector('footer');
+
+            if (!whatsappBtn || !footer) return;
+
+            // Usar IntersectionObserver para detectar quando o footer está próximo
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        // Footer está visível ou próximo, ocultar botão
+                        whatsappBtn.style.opacity = '0';
+                        whatsappBtn.style.pointerEvents = 'none';
+                        whatsappBtn.style.transition = 'opacity 0.3s ease';
+                    } else {
+                        // Footer não está visível, mostrar botão
+                        whatsappBtn.style.opacity = '1';
+                        whatsappBtn.style.pointerEvents = 'auto';
+                        whatsappBtn.style.transition = 'opacity 0.3s ease';
+                    }
+                });
+            }, {
+                rootMargin: '-160px' // Começar a ocultar -160px antes do footer ficar visível
+            });
+
+            observer.observe(footer);
+        }
+
         // Carregar produtos ao iniciar
         document.addEventListener('DOMContentLoaded', () => {
             iniciarLazyLoading();
@@ -1348,6 +1689,9 @@
                 logManager.log('📦 Produtos carregados, iniciando lazy loading...');
                 setTimeout(() => {
                     iniciarLazyLoading();
+                    gerarCategorias(); // Gerar categorias após carregar produtos
+                    gerarFooter(); // Gerar footer após carregar produtos
+                    controlarBotaoWhatsApp(); // Iniciar controle do botão WhatsApp
                 }, 50);
             });
 
