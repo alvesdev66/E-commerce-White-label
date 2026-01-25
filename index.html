@@ -512,72 +512,112 @@
             transition: all 0.3s ease;
         }
 
-        /* Estilos para Categorias */
+        /* Estilos para Categorias Dropdown */
         .categorias-container {
             max-width: 1200px;
             margin: 10px auto;
             padding: 0 20px;
             display: flex;
             justify-content: flex-start;
-            flex-wrap: nowrap;
-            gap: 12px;
-            overflow-x: auto;
-            overflow-y: hidden;
-            scroll-behavior: smooth;
             animation: fadeIn 0.6s ease-in-out;
-            -webkit-overflow-scrolling: touch;
-            scrollbar-width: thin;
-            scrollbar-color: #ccc transparent;
         }
 
-        /* Scrollbar minimalista para webkit browsers */
-        .categorias-container::-webkit-scrollbar {
-            height: 4px;
-        }
-
-        .categorias-container::-webkit-scrollbar-track {
-            background: transparent;
-        }
-
-        .categorias-container::-webkit-scrollbar-thumb {
-            background-color: #ccc;
-            border-radius: 2px;
-            border: none;
-        }
-
-        .categorias-container::-webkit-scrollbar-thumb:hover {
-            background-color: #999;
+        .categoria-dropdown {
+            position: relative;
+            display: inline-block;
         }
 
         .categoria-badge {
-            display: inline-block;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
             padding: 10px 16px;
-            /*Largura vertical e horizontal da categoria*/
             background-color: #ffffff;
-            border: 2px solid #f0f0f0;
-            border-radius: 20px;
-            font-size: 13px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
             font-weight: 400;
             color: #2a2a2a;
             text-transform: uppercase;
             letter-spacing: 0.5px;
             cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.2s ease;
             text-decoration: none;
             white-space: nowrap;
-            flex-shrink: 0;
+            background-color: #f9f9f9;
+        }
+
+        .categoria-badge:hover {
+            border-color: #e22a8c;
+            background-color: #fff;
+        }
+
+        .categoria-badge i {
+            font-size: 16px;
+            transition: transform 0.2s ease;
+        }
+
+        .categoria-badge.active i {
+            transform: rotate(180deg);
+        }
+
+        .categoria-dropdown-menu {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background-color: #ffffff;
+            border: 1px solid #d0d0d0;
+            border-radius: 6px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            min-width: 200px;
+            margin-top: 8px;
+            z-index: 1000;
+            animation: slideDown 0.2s ease;
+            max-height: 220px;
+            overflow-y: auto;
+        }
+
+        .categoria-dropdown-menu.active {
+            display: block;
+        }
+
+        .categoria-dropdown-item {
+            display: block;
+            padding: 12px 16px;
+            color: #2a2a2a;
+            text-decoration: none;
+            text-transform: uppercase;
+            font-size: 13px;
+            font-weight: 400;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .categoria-dropdown-item:last-child {
+            border-bottom: none;
+        }
+
+        .categoria-dropdown-item:hover {
+            background-color: #f5f5f5;
+            color: #e22a8c;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .categorias-hint {
-            max-width: 1200px;
-            margin: 10px auto 0;
-            padding: 0 20px;
-            font-size: 1px;
-            color: #999;
-            font-weight: 400;
-            text-align: left;
-            letter-spacing: 0.3px;
-            animation: fadeIn 0.8s ease-in-out;
             display: none;
         }
 
@@ -592,14 +632,13 @@
                 padding: 0 15px;
             }
 
-            .categorias-hint {
-                display: block;
-                padding: 0 15px;
+            .categoria-badge {
+                padding: 10px 14px;
+                font-size: 13px;
             }
 
-            .categoria-badge {
-                padding: 8px 14px;
-                font-size: 12px;
+            .categoria-dropdown-menu {
+                min-width: 180px;
             }
 
             .footer-container {
@@ -834,7 +873,7 @@
                     digitando: true,
                     velocidadeDigitacao: 60,
                     velocidadeApagacao: 30,
-                    pausaAntesdeApagar: 4000,
+                    pausaAntesdeApagar: 9000,
                     pausaAntesDeTrocar: 500
                 };
             },
@@ -1238,7 +1277,7 @@
         // Gerar Categorias Dinamicamente
         function gerarCategorias() {
             // Verificar se as categorias já existem
-            if (document.querySelector('.categorias-container')) {
+            if (document.querySelector('.categoria-dropdown')) {
                 return;
             }
 
@@ -1255,17 +1294,36 @@
                 'VESTIDO'
             ];
 
-            // Criar contêiner com hint
+            // Criar contêiner do dropdown
             const wrapperContainer = document.createElement('div');
-
             const container = document.createElement('div');
             container.className = 'categorias-container';
 
-            const html = categorias.map(categoria => {
-                return `<button class="categoria-badge" data-categoria="${categoria.toLowerCase()}">${categoria}</button>`;
+            // Criar dropdown
+            const dropdown = document.createElement('div');
+            dropdown.className = 'categoria-dropdown';
+
+            // Botão do dropdown
+            const button = document.createElement('button');
+            button.className = 'categoria-badge';
+            button.innerHTML = 'TODOS OS PRODUTOS <i class="ri-arrow-down-s-line"></i>';
+
+            // Menu do dropdown
+            const menu = document.createElement('div');
+            menu.className = 'categoria-dropdown-menu';
+
+            // Adicionar "Todos os produtos" como primeira opção
+            let menuItems = '<a href="#" class="categoria-dropdown-item" data-categoria="todos">TODOS OS PRODUTOS</a>';
+            menuItems += categorias.map(categoria => {
+                return `<a href="#" class="categoria-dropdown-item" data-categoria="${categoria.toLowerCase()}">${categoria}</a>`;
             }).join('');
 
-            container.innerHTML = html;
+            menu.innerHTML = menuItems;
+
+            // Montar estrutura
+            dropdown.appendChild(button);
+            dropdown.appendChild(menu);
+            container.appendChild(dropdown);
             wrapperContainer.appendChild(container);
 
             // Inserir após o texto animado
@@ -1276,28 +1334,41 @@
                 document.querySelector('main').insertBefore(wrapperContainer, document.querySelector('.produtos-destaque'));
             }
 
-            // Função para verificar e ajustar alinhamento
-            function ajustarAlinhamento() {
-                if (container.scrollWidth <= container.clientWidth) {
-                    container.style.justifyContent = 'center';
-                } else {
-                    container.style.justifyContent = 'flex-start';
+            // Adicionar funcionalidade de toggle
+            button.addEventListener('click', (e) => {
+                e.preventDefault();
+                menu.classList.toggle('active');
+                button.classList.toggle('active');
+
+                // Scroll suave para o elemento quando abrir
+                if (menu.classList.contains('active')) {
+                    setTimeout(() => {
+                        dropdown.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'center'
+                        });
+                    }, 50);
                 }
-            }
+            });
 
-            // Verificação inicial
-            setTimeout(ajustarAlinhamento, 100);
+            // Fechar dropdown ao clicar em um item
+            menu.querySelectorAll('.categoria-dropdown-item').forEach(item => {
+                item.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    menu.classList.remove('active');
+                    button.classList.remove('active');
+                });
+            });
 
-            // Monitorar redimensionamento da janela
-            window.addEventListener('resize', ajustarAlinhamento);
+            // Fechar dropdown ao clicar fora
+            document.addEventListener('click', (e) => {
+                if (!dropdown.contains(e.target)) {
+                    menu.classList.remove('active');
+                    button.classList.remove('active');
+                }
+            });
 
-            // Monitorar mudanças no DOM usando ResizeObserver
-            if ('ResizeObserver' in window) {
-                const resizeObserver = new ResizeObserver(ajustarAlinhamento);
-                resizeObserver.observe(container);
-            }
-
-            logManager.log('✓ Categorias geradas dinamicamente com monitoramento ativo');
+            logManager.log('✓ Categorias em dropdown geradas dinamicamente');
         }
 
         // Gerar Footer Dinamicamente
