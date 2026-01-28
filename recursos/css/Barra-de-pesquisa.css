@@ -114,10 +114,35 @@
  }
 
  @media (max-width: 520px) {
+
+    /* Evita que o dropdown seja cortado por ancestrais com overflow/transform (problema observado no Chrome) */
+    .barra-de-pesquisa-totalidade,
+    .caixa-de-pesquisa {
+       overflow: visible;
+       /* garante que o dropdown possa escapar */
+       -webkit-overflow-scrolling: touch;
+    }
+
+    /* Renderizamos o dropdown como fixed no mobile — o JS ajusta posição com precisão */
     .sugestoes-list {
+       position: absolute;
+       /* permanece absolute por padrão — JS pode trocar para fixed quando necessário */
        left: 8px;
        right: 8px;
        top: calc(100% + 8px);
-       max-height: 200px;
+       max-height: 45vh;
+       box-shadow: 0 18px 40px rgba(17, 24, 39, 0.12);
+       z-index: 1500;
+       -webkit-overflow-scrolling: touch;
+       touch-action: manipulation;
+       -webkit-tap-highlight-color: transparent;
+    }
+
+    /* Alvos maiores para toque + permitir quebra de linha */
+    .sugestao-item {
+       padding: 14px 16px;
+       min-height: 44px;
+       font-size: 16px;
+       white-space: normal;
     }
  }

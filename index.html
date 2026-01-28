@@ -1150,6 +1150,8 @@
             `).join('');
             sugestoesList.hidden = false;
             buscaInput.setAttribute('aria-expanded', 'true');
+            // correção para Chrome (mobile): reposicionar o dropdown como `fixed` quando necessário
+            try { ajustarPosicaoSugestoes(); } catch (err) { /* silencioso */ }
         }
 
         function fecharSugestoes() {
@@ -1249,7 +1251,55 @@
             });
 
             // prefetch leve ao focar (UX rápido)
-            buscaInput.addEventListener('focus', () => { carregarSugestoes().catch(() => { }); });
+            buscaInput.addEventListener('focus', () => { carregarSugestoes().catch(() => { }); try { ajustarPosicaoSugestoes(); } catch (e) { } });
+
+            /*
+             * Ajusta posicionamento do dropdown de sugestões — workaround para glitches do Chrome
+             * - Em navegadores problemáticos (Chrome mobile) posiciona como fixed e recalcula
+             * - Em outros navegadores mantém comportamento CSS (absolute dentro do input)
+             */
+            function ajustarPosicaoSugestoes() {
+                if (!sugestoesList) return;
+                // só agir quando o dropdown estiver visível
+                if (sugestoesList.hidden) return;
+
+                const isMobile = window.matchMedia && window.matchMedia('(max-width:520px)').matches;
+                const isChromeMobile = /Chrome\//.test(navigator.userAgent) && /Android|Mobile/.test(navigator.userAgent);
+
+                // Se estivermos em Chrome no mobile, usar fixed para escapar de clipping por ancestrais com transform/overflow
+                if (isMobile && isChromeMobile) {
+                    const rect = buscaInput.getBoundingClientRect();
+                    sugestoesList.style.position = 'fixed';
+                    sugestoesList.style.left = Math.max(8, Math.round(rect.left)) + 'px';
+                    sugestoesList.style.top = Math.max(8, Math.round(rect.bottom + 8)) + 'px';
+                    sugestoesList.style.width = Math.round(rect.width) + 'px';
+                    sugestoesList.style.right = 'auto';
+                    sugestoesList.style.maxHeight = '45vh';
+                    sugestoesList.style.zIndex = 99999;
+                    sugestoesList.style.touchAction = 'manipulation';
+                    sugestoesList.style.WebkitOverflowScrolling = 'touch';
+
+                    // Vincular reposicionamento enquanto estiver aberto
+                    if (!window._sug_pos_bound) {
+                        window.addEventListener('resize', ajustarPosicaoSugestoes);
+                        window.addEventListener('orientationchange', ajustarPosicaoSugestoes);
+                        window.addEventListener('scroll', ajustarPosicaoSugestoes, true);
+                        window._sug_pos_bound = true;
+                    }
+                    return;
+                }
+
+                // Reset para comportamento padrão (desktop / outros navegadores)
+                sugestoesList.style.position = '';
+                sugestoesList.style.left = '';
+                sugestoesList.style.top = '';
+                sugestoesList.style.width = '';
+                sugestoesList.style.right = '';
+                sugestoesList.style.maxHeight = '';
+                sugestoesList.style.zIndex = '';
+                sugestoesList.style.touchAction = '';
+                sugestoesList.style.WebkitOverflowScrolling = '';
+            }
         }
 
 
