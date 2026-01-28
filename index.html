@@ -383,7 +383,7 @@
             cursor: pointer;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
             transition: all 0.3s ease;
-            z-index: 500;
+            z-index: 20;
             text-decoration: none;
             color: #fff;
         }
@@ -531,7 +531,7 @@
             animation: fadeIn 0.6s ease-in-out;
             position: sticky;
             top: 120px;
-            z-index: 998;
+            z-index: 19;
             padding-top: 10px;
             padding-bottom: 10px;
             background-color: #ffffff18;
@@ -1019,6 +1019,18 @@
                     // Toggle do submenu atual
                     item.classList.toggle('active');
                     submenu.classList.toggle('active');
+
+                    // Ao abrir o submenu, garantir que ele comece pelo topo e que o primeiro link seja acessível
+                    if (submenu.classList.contains('active')) {
+                        // Garantir que a rolagem ocorra após o CSS aplicar o display
+                        requestAnimationFrame(() => {
+                            submenu.scrollTop = 0;
+                            const primeiro = submenu.querySelector('.submenu-link, .submenu-item');
+                            if (primeiro && typeof primeiro.focus === 'function') {
+                                try { primeiro.focus({ preventScroll: true }); } catch (err) { primeiro.focus(); }
+                            }
+                        });
+                    }
                 });
             }
         });
@@ -1097,6 +1109,22 @@
         // Verifica ao redimensionar e ao carregar a página
         window.addEventListener('resize', hideOverlayIfDesktop);
         window.addEventListener('load', hideOverlayIfDesktop);
+
+        // Fecha submenu 'Produtos' ao rolar a página em telas maiores
+        let _scrollTimeout;
+        window.addEventListener('scroll', () => {
+            if (window.innerWidth > 768) {
+                // evita execução excessiva durante o scroll (debounce simples)
+                clearTimeout(_scrollTimeout);
+                _scrollTimeout = setTimeout(() => {
+                    navItems.forEach(item => {
+                        const submenu = item.querySelector('.submenu');
+                        if (submenu) submenu.classList.remove('active');
+                        item.classList.remove('active');
+                    });
+                }, 100);
+            }
+        });
         // Rotação de hashtags: sobe a atual e entra a próxima de baixo ✨
         (function () {
             const hashtagsLista = ['#ElasVestemJuvele', '#Promoções🔥', '#ModaFeminina', '#Compra100%Segura']; // personalize aqui
@@ -1167,7 +1195,7 @@
 
         let produtosCarregados = [];
         let produtosExibidos = 0;
-        const PRODUTOS_POR_PAGINA = 12; //Deve ser sempre um multiplo de 2, 3 e 4 para melhor UX
+        const PRODUTOS_POR_PAGINA = 24; //Deve ser sempre um multiplo de 2, 3 e 4 para melhor UX
 
         // Formata preço para Real brasileiro
         function formatarPreco(preco) {
@@ -1230,16 +1258,10 @@
                                 loading="lazy"
                                 src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 400'%3E%3Crect fill='%23f0f0f0' width='300' height='400'/%3E%3C/svg%3E"
                                 onerror="this.src='https://via.placeholder.com/300x400?text=Produto'">
-                            ${produto.cores && produto.cores.length > 0 && produto.disponibilidade ?
-                        `<div class="produto-cores-badge">
-                                    <span class="circle-color-rainbow"></span>
-                                    ${produto.cores.length}
-                                </div>` : ''}
-                        </div>
+                        </div> 
                         <div class="produto-info">
                             <div>
                                 <h3 class="produto-nome">${produto.nome}</h3>
-                                <div class="produto-descricao-pequena">${produto.descricao.substring(0, 80)}...</div>
                             </div>
                             <div>
                                 ${produto.desconto ? `<span class="desconto-badge">${produto.desconto}% OFF</span>` : ''}
@@ -1424,6 +1446,17 @@
                 // Agora sim toggle do menu
                 menu.classList.toggle('active');
                 button.classList.toggle('active');
+
+                // Ao abrir, garantir que o menu mostre o começo da lista e posicione o foco no primeiro item
+                if (menu.classList.contains('active')) {
+                    setTimeout(() => {
+                        menu.scrollTop = 0;
+                        const primeiro = menu.querySelector('.categoria-dropdown-item');
+                        if (primeiro && typeof primeiro.focus === 'function') {
+                            try { primeiro.focus({ preventScroll: true }); } catch (err) { primeiro.focus(); }
+                        }
+                    }, 30); // pequeno atraso para permitir a animação/estado de exibição
+                }
             });
 
             // Fechar dropdown ao clicar em um item
