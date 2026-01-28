@@ -1268,16 +1268,26 @@
 
                 // Se estivermos em Chrome no mobile, usar fixed para escapar de clipping por ancestrais com transform/overflow
                 if (isMobile && isChromeMobile) {
-                    const rect = buscaInput.getBoundingClientRect();
+                    const container = buscaInput.closest('.caixa-de-pesquisa') || buscaInput.parentElement;
+                    const crect = container.getBoundingClientRect();
+
+                    /* horizontal offset usado pelo CSS quando o dropdown é absolute dentro do container */
+                    const horizOffset = 12; // deve coincidir com .sugestoes-list { left: 12px } in CSS
+
+                    const left = Math.round(crect.left + horizOffset);
+                    const width = Math.round(Math.max(120, crect.width - horizOffset * 2));
+                    const top = Math.round(crect.bottom + 8);
+
                     sugestoesList.style.position = 'fixed';
-                    sugestoesList.style.left = Math.max(8, Math.round(rect.left)) + 'px';
-                    sugestoesList.style.top = Math.max(8, Math.round(rect.bottom + 8)) + 'px';
-                    sugestoesList.style.width = Math.round(rect.width) + 'px';
+                    sugestoesList.style.left = left + 'px';
+                    sugestoesList.style.top = top + 'px';
+                    sugestoesList.style.width = width + 'px';
                     sugestoesList.style.right = 'auto';
                     sugestoesList.style.maxHeight = '45vh';
                     sugestoesList.style.zIndex = 99999;
                     sugestoesList.style.touchAction = 'manipulation';
                     sugestoesList.style.WebkitOverflowScrolling = 'touch';
+                    sugestoesList.setAttribute('data-fixed', 'true');
 
                     // Vincular reposicionamento enquanto estiver aberto
                     if (!window._sug_pos_bound) {
@@ -1294,6 +1304,7 @@
                 sugestoesList.style.left = '';
                 sugestoesList.style.top = '';
                 sugestoesList.style.width = '';
+                sugestoesList.removeAttribute('data-fixed');
                 sugestoesList.style.right = '';
                 sugestoesList.style.maxHeight = '';
                 sugestoesList.style.zIndex = '';
